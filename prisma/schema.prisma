@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Wines {
+  id        String      @id @default(uuid())
+  name      String
+  country   String?
+  region    String?
+  price     Int
+  type      WineType    @relation(fields: [typeId], references: [id])
+  typeId    String      @map("type_id")
+  WineCount WineCount[]
+
+  @@map("wines")
+}
+
+model WineType {
+  id    String  @id @default(uuid())
+  name  String
+  wines Wines[]
+
+  @@map("wine_type")
+}
+
+model WineCount {
+  id      String @id @default(uuid())
+  balance Int
+  count   Int?
+  invoice Int?
+  wineId  String @map("wine_id")
+  wine    Wines  @relation(fields: [wineId], references: [id])
+
+  @@map("wine_count")
+}
