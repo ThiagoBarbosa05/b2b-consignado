@@ -168,6 +168,10 @@ const config = {
         "fromEnvVar": null,
         "value": "debian-openssl-3.0.x",
         "native": true
+      },
+      {
+        "fromEnvVar": null,
+        "value": "rhel-openssl-3.0.x"
       }
     ],
     "previewFeatures": [],
@@ -185,16 +189,17 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
         "fromEnvVar": "DATABASE_URL",
-        "value": "postgresql://postgres:364556@db.tmczshhcutbckpeguntv.supabase.co:5432/postgres"
+        "value": null
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/app/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Customer {\n  id        String      @id @default(uuid())\n  name      String\n  register  String\n  Consigned Consigned[]\n\n  @@map(\"customers\")\n}\n\nmodel Wines {\n  id               String            @id @default(uuid())\n  name             String\n  country          String?\n  region           String?\n  price            Int\n  type             WineType          @relation(fields: [typeId], references: [id])\n  typeId           String            @map(\"type_id\")\n  winesOnConsigned wineOnConsigned[]\n\n  // WineCount WineCount[]\n  @@map(\"wines\")\n}\n\nmodel WineType {\n  id    String  @id @default(uuid())\n  name  String\n  wines Wines[]\n\n  @@map(\"wine_type\")\n}\n\nmodel Consigned {\n  id               String            @id @default(uuid())\n  customerId       String            @map(\"customer_id\")\n  customer         Customer          @relation(fields: [customerId], references: [id])\n  winesOnConsigned wineOnConsigned[]\n  createdAt        DateTime          @default(now()) @map(\"created_at\")\n\n  @@map(\"consigned\")\n}\n\nmodel wineOnConsigned {\n  consignedId String @map(\"consigned_id\")\n  wineId      String @map(\"wine_id\")\n\n  consigned Consigned @relation(fields: [consignedId], references: [id])\n  wines     Wines     @relation(fields: [wineId], references: [id])\n\n  balance Int\n  count   Int?\n\n  @@id([consignedId, wineId])\n  @@map(\"wine_on_consigned\")\n}\n",
-  "inlineSchemaHash": "834fded392b84b20fadd76a81d464fc3be3aea5c040bf899fa5f354bea481b17",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider      = \"prisma-client-js\"\n  output        = \"../src/app/generated/prisma\"\n  binaryTargets = [\"native\", \"rhel-openssl-3.0.x\"]\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Customer {\n  id        String      @id @default(uuid())\n  name      String\n  register  String\n  Consigned Consigned[]\n\n  @@map(\"customers\")\n}\n\nmodel Wines {\n  id               String            @id @default(uuid())\n  name             String\n  country          String?\n  region           String?\n  price            Int\n  type             WineType          @relation(fields: [typeId], references: [id])\n  typeId           String            @map(\"type_id\")\n  winesOnConsigned wineOnConsigned[]\n\n  // WineCount WineCount[]\n  @@map(\"wines\")\n}\n\nmodel WineType {\n  id    String  @id @default(uuid())\n  name  String\n  wines Wines[]\n\n  @@map(\"wine_type\")\n}\n\nmodel Consigned {\n  id               String            @id @default(uuid())\n  customerId       String            @map(\"customer_id\")\n  customer         Customer          @relation(fields: [customerId], references: [id])\n  winesOnConsigned wineOnConsigned[]\n  createdAt        DateTime          @default(now()) @map(\"created_at\")\n\n  @@map(\"consigned\")\n}\n\nmodel wineOnConsigned {\n  consignedId String @map(\"consigned_id\")\n  wineId      String @map(\"wine_id\")\n\n  consigned Consigned @relation(fields: [consignedId], references: [id])\n  wines     Wines     @relation(fields: [wineId], references: [id])\n\n  balance Int\n  count   Int?\n\n  @@id([consignedId, wineId])\n  @@map(\"wine_on_consigned\")\n}\n",
+  "inlineSchemaHash": "2dbecebd37a5d402094085b999891543008d70c84a916c5a8d54a5bf78ef4940",
   "copyEngine": true
 }
 
@@ -235,6 +240,10 @@ Object.assign(exports, Prisma)
 // file annotations for bundling tools to include these files
 path.join(__dirname, "libquery_engine-debian-openssl-3.0.x.so.node");
 path.join(process.cwd(), "src/app/generated/prisma/libquery_engine-debian-openssl-3.0.x.so.node")
+
+// file annotations for bundling tools to include these files
+path.join(__dirname, "libquery_engine-rhel-openssl-3.0.x.so.node");
+path.join(process.cwd(), "src/app/generated/prisma/libquery_engine-rhel-openssl-3.0.x.so.node")
 // file annotations for bundling tools to include these files
 path.join(__dirname, "schema.prisma");
 path.join(process.cwd(), "src/app/generated/prisma/schema.prisma")
