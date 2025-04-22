@@ -1,26 +1,42 @@
 "use client";
 
-import { Button } from "@/app/components/ui/button";
 import { useWineCountStore } from "@/app/store/wine-count-store";
 import { saveCount } from "../[id]/actions/save-count";
+import { Button } from "@/components/ui/button";
+import { useTransition } from "react";
+import { LoaderCircle } from "lucide-react";
 
-export function SaveCount() {
+interface SaveCountProps {
+  consignedId: string;
+  customerId: string;
+}
+
+export function SaveCount({ consignedId, customerId }: SaveCountProps) {
+  const [isPending, startTransition] = useTransition();
   const { quantities } = useWineCountStore();
 
   async function handleSubmitCount() {
     const winesCounted = Object.entries(quantities).map(([wineId, count]) => ({
       wineId,
       count,
+      consignedId,
     }));
 
-    await saveCount(winesCounted);
+    startTransition(async () => {
+      const result = await saveCount(winesCounted, customerId);
+      if (result?.status !== "ERROR") {
+        localStorage.removeItem("wine-count-storage");
+      }
+    });
   }
 
-  console.log(quantities);
-
   return (
-    <Button onClick={handleSubmitCount} className="w-[20%] cursor-pointer">
-      Enviar
+    <Button
+      disabled={isPending}
+      onClick={handleSubmitCount}
+      className="w-[20%] cursor-pointer"
+    >
+      {isPending ? <LoaderCircle className="animate-spin h-5 w-5" /> : "Enviar"}
     </Button>
   );
 }

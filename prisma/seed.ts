@@ -1,4 +1,4 @@
-import prisma from "@/app/lib/prisma"
+import prisma from "@/lib/prisma"
 
 
 async function seed() {
@@ -123,95 +123,23 @@ async function seed() {
   //   }
   // })
   
-//  const consigned = await prisma.consigned.create({
-//     data: {
-//       customerId: "3c693507-3fe5-40c3-b426-fadb1d431b66",
-//     },
-//   })
+ const consigned = await prisma.consigned.create({
+    data: {
+      customerId: "463232c2-9107-4cc8-b25f-d6421b9207c2",
+    },
+  })
+
+  const wines = await prisma.wines.findMany()
 
   await prisma.wineOnConsigned.createMany({
-
-      data: [
-        {
-          wineId: "1a493a04-d086-4832-a8f7-0f1c56abc4a7", 
-          balance: 4, 
+      data: wines.map(wine => {
+        return {
+          consignedId: consigned.id,
+          wineId: wine.id,
           count: 0,
-          consignedId: "9312a9ac-3819-4245-8529-cf4b5657d766"
-        },
-        {
-          wineId: "1f392d98-5e74-4b60-9ae2-c2941865e122", 
-          balance: 3, 
-          count: 0,
-          consignedId: "9312a9ac-3819-4245-8529-cf4b5657d766"
-        },
-        {
-          wineId: "3c33f093-1f2b-497c-a73a-955bb859df7b", 
-          balance: 3, 
-          count: 0,
-          consignedId: "9312a9ac-3819-4245-8529-cf4b5657d766"
-        },
-        {
-          wineId: "466df961-bbb9-4c56-8fcb-68d277e907bd", 
-          balance: 3, 
-          count: 0,
-          consignedId: "9312a9ac-3819-4245-8529-cf4b5657d766"
-        },
-        {
-          wineId: "516987d3-9afe-47a5-9ac2-239ecca8c47b", 
-          balance: 3, 
-          count: 0,
-          consignedId: "9312a9ac-3819-4245-8529-cf4b5657d766"
-        },
-        {
-          wineId: "541f38ad-6dae-45d8-a401-0db80f2767f3", 
-          balance: 3, 
-          count: 0,
-          consignedId: "9312a9ac-3819-4245-8529-cf4b5657d766"
-        },
-        {
-          wineId: "95beac38-0526-481c-96d2-dcf4cf3838d5", 
-          balance: 3, 
-          count: 0,
-          consignedId: "9312a9ac-3819-4245-8529-cf4b5657d766"
-        },
-        {
-          wineId: "992f185f-95c1-4695-a571-ae90bcd1a959", 
-          balance: 3, 
-          count: 0,
-          consignedId: "9312a9ac-3819-4245-8529-cf4b5657d766"
-        },
-        {
-          wineId: "9942ef93-84b8-40e4-a23c-0cf3583ab2ed", 
-          balance: 3, 
-          count: 0,
-          consignedId: "9312a9ac-3819-4245-8529-cf4b5657d766"
-        },
-        {
-          wineId: "b0e09077-3f62-4924-bf2e-7059cb98ff26", 
-          balance: 3, 
-          count: 0,
-          consignedId: "9312a9ac-3819-4245-8529-cf4b5657d766"
-        },
-        {
-          wineId: "b1b0160d-d11e-41e3-8121-d36f34ceb5be", 
-          balance: 3, 
-          count: 0,
-          consignedId: "9312a9ac-3819-4245-8529-cf4b5657d766"
-        },
-        {
-          wineId: "e189391f-f1d3-4e3e-b598-7b3a35129d45", 
-          balance: 3, 
-          count: 0,
-          consignedId: "9312a9ac-3819-4245-8529-cf4b5657d766"
-        },
-        {
-          wineId: "f1423257-50fb-4ab9-a388-c1dec2f4b40a", 
-          balance: 3, 
-          count: 0,
-          consignedId: "9312a9ac-3819-4245-8529-cf4b5657d766"
-        },
-      ]
-    
+          balance: 5
+        }
+      })
   })
 }
 

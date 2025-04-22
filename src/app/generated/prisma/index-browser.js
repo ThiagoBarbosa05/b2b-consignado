@@ -140,6 +140,8 @@ exports.Prisma.WineTypeScalarFieldEnum = {
 exports.Prisma.ConsignedScalarFieldEnum = {
   id: 'id',
   customerId: 'customerId',
+  status: 'status',
+  completedIn: 'completedIn',
   createdAt: 'createdAt'
 };
 
@@ -164,14 +166,17 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
-
+exports.ConsignedStatus = exports.$Enums.ConsignedStatus = {
+  PENDENTE: 'PENDENTE',
+  CONCLUÍDO: 'CONCLUÍDO'
+};
 
 exports.Prisma.ModelName = {
   Customer: 'Customer',
   Wines: 'Wines',
   WineType: 'WineType',
   Consigned: 'Consigned',
-  wineOnConsigned: 'wineOnConsigned'
+  WineOnConsigned: 'WineOnConsigned'
 };
 
 /**

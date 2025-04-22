@@ -5,7 +5,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/app/components/ui/table";
+} from "@/components/ui/table";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { listConsigned } from "./actions/list-consigned";
@@ -14,25 +14,31 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/app/components/ui/accordion";
+} from "@/components/ui/accordion";
 import { CountWines } from "../components/count-wines";
 import { SaveCount } from "../components/save-count";
+import { Dot } from "lucide-react";
+import { twMerge } from "tailwind-merge";
+import { unstable_cache } from "next/cache";
+import prisma from "@/lib/prisma";
 
 interface PageProps {
   params: Promise<{ id: string }>;
 }
 
 export default async function Page({ params }: PageProps) {
-  const { id: consignedId } = await params;
+  const { id: customerId } = await params;
 
-  const consignedList = await listConsigned(consignedId);
+  const consignedList = await listConsigned(customerId);
+
+  console.log(consignedList);
 
   return (
     <div>
       <h2 className="text-2xl font-bold">INSÓLITO HOTEL LTDA</h2>
 
       <section className="mt-6">
-        <div>
+        <div className="space-y-5">
           {consignedList.map((consigned) => {
             return (
               <Accordion
@@ -53,6 +59,28 @@ export default async function Page({ params }: PageProps) {
                           locale: ptBR,
                         })}
                       </p>
+                      <span className="flex mt-2 text-xs text-zinc-400 items-center gap-2">
+                        <span
+                          className={twMerge(
+                            "size-2 rounded-full bg-yellow-600",
+                            consigned.status === "CONCLUÍDO" && "bg-green-500"
+                          )}
+                        />
+                        {consigned.status === "CONCLUÍDO" ? (
+                          <span>
+                            {consigned.status.toLowerCase()} em{" "}
+                            {format(
+                              consigned.completedIn ?? new Date(),
+                              "dd 'de' MMMM  yyyy",
+                              {
+                                locale: ptBR,
+                              }
+                            )}
+                          </span>
+                        ) : (
+                          consigned.status.toLowerCase()
+                        )}
+                      </span>
                     </div>
                   </AccordionTrigger>
 
@@ -73,10 +101,18 @@ export default async function Page({ params }: PageProps) {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        <CountWines data={consigned.winesOnConsigned} />
+                        <CountWines
+                          consignedStatus={consigned.status}
+                          data={consigned.winesOnConsigned}
+                        />
                       </TableBody>
                     </Table>
-                    <SaveCount />
+                    {consigned.status !== "CONCLUÍDO" && (
+                      <SaveCount
+                        consignedId={consigned.id}
+                        customerId={customerId}
+                      />
+                    )}
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>

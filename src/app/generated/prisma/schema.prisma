@@ -32,7 +32,7 @@ model Wines {
   price            Int
   type             WineType          @relation(fields: [typeId], references: [id])
   typeId           String            @map("type_id")
-  winesOnConsigned wineOnConsigned[]
+  winesOnConsigned WineOnConsigned[]
 
   // WineCount WineCount[]
   @@map("wines")
@@ -46,17 +46,25 @@ model WineType {
   @@map("wine_type")
 }
 
+enum ConsignedStatus {
+  PENDENTE
+  CONCLUÍDO
+}
+
 model Consigned {
   id               String            @id @default(uuid())
   customerId       String            @map("customer_id")
   customer         Customer          @relation(fields: [customerId], references: [id])
-  winesOnConsigned wineOnConsigned[]
-  createdAt        DateTime          @default(now()) @map("created_at")
+  winesOnConsigned WineOnConsigned[]
+  status           ConsignedStatus   @default(PENDENTE)
+
+  completedIn DateTime? @map("saved_in")
+  createdAt   DateTime  @default(now()) @map("created_at")
 
   @@map("consigned")
 }
 
-model wineOnConsigned {
+model WineOnConsigned {
   consignedId String @map("consigned_id")
   wineId      String @map("wine_id")
 

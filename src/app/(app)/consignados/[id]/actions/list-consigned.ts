@@ -1,8 +1,8 @@
-import prisma from "@/app/lib/prisma";
+import prisma from "@/lib/prisma"
+import { unstable_cache } from "next/cache"
 
-export async function listConsigned(customerId: string) {
-
-  const consigned = await prisma.consigned.findMany({
+export const listConsigned = unstable_cache(async (customerId: string) => {
+  return await prisma.consigned.findMany({
     where: {
       customerId
     },
@@ -19,7 +19,4 @@ export async function listConsigned(customerId: string) {
       }
     }
   })
-  
-  return consigned
-
-}
+}, ["consigned"], {tags: ["consigned"]})

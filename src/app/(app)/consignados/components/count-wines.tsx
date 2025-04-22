@@ -1,8 +1,8 @@
 "use client";
-import { Input } from "@/app/components/ui/input";
-import { TableCell, TableRow } from "@/app/components/ui/table";
+import { TableCell, TableRow } from "@/components/ui/table";
 import { useWineCountStore } from "@/app/store/wine-count-store";
 import { twMerge } from "tailwind-merge";
+import { Input } from "@/components/ui/input";
 
 interface WineType {
   id: string;
@@ -29,9 +29,10 @@ interface WineOnConsigned {
 
 type WinesOnConsigned = {
   data: WineOnConsigned[];
+  consignedStatus: "CONCLUÍDO" | "PENDENTE";
 };
 
-export function CountWines({ data }: WinesOnConsigned) {
+export function CountWines({ data, consignedStatus }: WinesOnConsigned) {
   const { setQuantity, quantities } = useWineCountStore();
 
   const formatCurrency = new Intl.NumberFormat("pt-BR", {
@@ -42,8 +43,6 @@ export function CountWines({ data }: WinesOnConsigned) {
   function handleChange(id: string, value: number) {
     setQuantity(id, value);
   }
-
-  console.log(quantities);
 
   return (
     <>
@@ -56,6 +55,7 @@ export function CountWines({ data }: WinesOnConsigned) {
           <TableCell>{balance}</TableCell>
           <TableCell>
             <Input
+              readOnly={consignedStatus === "CONCLUÍDO"}
               type="number"
               className="max-w-[80px] text-center"
               defaultValue={quantities[wineId] ?? count}
