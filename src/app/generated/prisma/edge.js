@@ -197,7 +197,7 @@ const config = {
     "db": {
       "url": {
         "fromEnvVar": "DATABASE_URL",
-        "value": "postgresql://docker:docker@localhost:5432/db?schema=public"
+        "value": "postgresql://postgres:b2b36455629@db.tmczshhcutbckpeguntv.supabase.co:5432/postgres?connect_timeout=30"
       }
     }
   },
